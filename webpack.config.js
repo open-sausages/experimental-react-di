@@ -23,7 +23,8 @@ var config = {
 
   externals: {
     'lib/Injector': 'Injector',
-    'react': 'React'
+    'react': 'React',
+    'redux': 'Redux'
   }
 };
 

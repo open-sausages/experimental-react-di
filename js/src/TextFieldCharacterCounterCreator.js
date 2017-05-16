@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Experiment 2: Add a character count to all TextField instances
+ */
 export default (TextField) => {
     return class FancyText extends React.Component {
       constructor(props) {

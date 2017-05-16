@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,42 +74,6 @@ module.exports = React;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-module.exports = Injector;
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Injector = __webpack_require__(1);
-
-var _Injector2 = _interopRequireDefault(_Injector);
-
-var _CustomGalleryItemCreator = __webpack_require__(5);
-
-var _CustomGalleryItemCreator2 = _interopRequireDefault(_CustomGalleryItemCreator);
-
-var _TextFieldCharacterCounterCreator = __webpack_require__(6);
-
-var _TextFieldCharacterCounterCreator2 = _interopRequireDefault(_TextFieldCharacterCounterCreator);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_Injector2.default.customise('File', _CustomGalleryItemCreator2.default);
-_Injector2.default.customise('TextField', _TextFieldCharacterCounterCreator2.default);
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -133,7 +97,43 @@ exports.default = function (File) {
 };
 
 /***/ }),
-/* 6 */
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (FormAction) {
+  return function (props) {
+    var newProps = _extends({}, props, {
+      data: _extends({}, props.data, {
+        buttonStyle: props.loading ? 'danger' : props.data.buttonStyle
+      }),
+      handleClick: function handleClick(e) {
+        if (window.confirm('Did you really mean to click this?')) {
+          props.handleClick(e);
+        }
+      }
+    });
+
+    return _react2.default.createElement(FormAction, newProps);
+  };
+};
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -204,6 +204,99 @@ exports.default = function (TextField) {
     return FancyText;
   }(_react2.default.Component);
 };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _redux = __webpack_require__(7);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (TextField) {
+  return function (props) {
+    var timeout = void 0;
+    var passwordCheck = function passwordCheck(e) {
+      e.persist();
+      timeout && window.clearTimeout(timeout);
+      timeout = window.setTimeout(function () {
+        if (!e.target.value.match(/\d{2}/)) {
+          alert('The text must contain at least two consecutive digits');
+        }
+      }, 1000);
+
+      return e;
+    };
+    var newProps = _extends({}, props, {
+      onChange: (0, _redux.compose)(props.onChange, passwordCheck)
+    });
+
+    return _react2.default.createElement(TextField, newProps);
+  };
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = Injector;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Injector = __webpack_require__(5);
+
+var _Injector2 = _interopRequireDefault(_Injector);
+
+var _CustomGalleryItemCreator = __webpack_require__(1);
+
+var _CustomGalleryItemCreator2 = _interopRequireDefault(_CustomGalleryItemCreator);
+
+var _TextFieldCharacterCounterCreator = __webpack_require__(3);
+
+var _TextFieldCharacterCounterCreator2 = _interopRequireDefault(_TextFieldCharacterCounterCreator);
+
+var _TextFieldPasswordStrengthCheckerCreator = __webpack_require__(4);
+
+var _TextFieldPasswordStrengthCheckerCreator2 = _interopRequireDefault(_TextFieldPasswordStrengthCheckerCreator);
+
+var _FormActionAwesomenessCreator = __webpack_require__(2);
+
+var _FormActionAwesomenessCreator2 = _interopRequireDefault(_FormActionAwesomenessCreator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_Injector2.default.customise('File', _CustomGalleryItemCreator2.default);
+_Injector2.default.customise('TextField', _TextFieldCharacterCounterCreator2.default);
+_Injector2.default.customise('TextField', _TextFieldPasswordStrengthCheckerCreator2.default);
+_Injector2.default.customise('FormAction', _FormActionAwesomenessCreator2.default);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = Redux;
 
 /***/ })
 /******/ ]);
