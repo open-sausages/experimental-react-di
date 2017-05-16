@@ -1,0 +1,6 @@
+---
+Name: unclecheese
+---
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'unclecheese-assets/js/dist/main.bundle.js'
