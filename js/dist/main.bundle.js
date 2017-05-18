@@ -140,12 +140,8 @@ exports.default = function (FormAction) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(0);
 
@@ -153,56 +149,27 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 exports.default = function (TextField) {
-  return function (_React$Component) {
-    _inherits(FancyText, _React$Component);
+    return function (props) {
+        props.warningBuffer = 10;
+        var warningBuffer = props.warningBuffer,
+            limit = props.limit,
+            length = props.value.length;
 
-    function FancyText(props) {
-      _classCallCheck(this, FancyText);
-
-      var _this = _possibleConstructorReturn(this, (FancyText.__proto__ || Object.getPrototypeOf(FancyText)).call(this, props));
-
-      _this.handleChange = _this.handleChange.bind(_this);
-      _this.state = {
-        characterCount: props.value.length
-      };
-      return _this;
-    }
-
-    _createClass(FancyText, [{
-      key: 'handleChange',
-      value: function handleChange(e) {
-        this.setState({
-          characterCount: e.target.value.length
-        });
-
-        this.props.onChange(e);
-      }
-    }, {
-      key: 'render',
-      value: function render() {
+        var remainingChars = limit - length;
+        var showWarning = length + warningBuffer >= limit;
         return _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(TextField, _extends({}, this.props, { onChange: this.handleChange })),
-          _react2.default.createElement(
-            'small',
+            'div',
             null,
-            'Character count: ',
-            this.state.characterCount
-          )
+            _react2.default.createElement(TextField, props),
+            showWarning && _react2.default.createElement(
+                'small',
+                null,
+                'Characters remaining: ',
+                remainingChars
+            )
         );
-      }
-    }]);
-
-    return FancyText;
-  }(_react2.default.Component);
+    };
 };
 
 /***/ }),
@@ -216,35 +183,30 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _redux = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (TextField) {
   return function (props) {
-    var timeout = void 0;
-    var passwordCheck = function passwordCheck(e) {
-      e.persist();
-      timeout && window.clearTimeout(timeout);
-      timeout = window.setTimeout(function () {
-        if (!e.target.value.match(/\d{2}/)) {
-          alert('The text must contain at least two consecutive digits');
-        }
-      }, 1000);
+    props.limit = 40;
+    var limit = props.limit,
+        value = props.value;
 
-      return e;
-    };
-    var newProps = _extends({}, props, {
-      onChange: (0, _redux.compose)(props.onChange, passwordCheck)
-    });
+    var invalid = limit !== undefined && value.length > limit;
 
-    return _react2.default.createElement(TextField, newProps);
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(TextField, props),
+      invalid && _react2.default.createElement(
+        'span',
+        { style: { color: 'red' } },
+        'Text is too long! Must be ' + limit + ' characters'
+      )
+    );
   };
 };
 
@@ -277,9 +239,9 @@ var _TextFieldCharacterCounterCreator = __webpack_require__(3);
 
 var _TextFieldCharacterCounterCreator2 = _interopRequireDefault(_TextFieldCharacterCounterCreator);
 
-var _TextFieldPasswordStrengthCheckerCreator = __webpack_require__(4);
+var _TextFieldLengthCheckerCreator = __webpack_require__(4);
 
-var _TextFieldPasswordStrengthCheckerCreator2 = _interopRequireDefault(_TextFieldPasswordStrengthCheckerCreator);
+var _TextFieldLengthCheckerCreator2 = _interopRequireDefault(_TextFieldLengthCheckerCreator);
 
 var _FormActionAwesomenessCreator = __webpack_require__(2);
 
@@ -287,16 +249,20 @@ var _FormActionAwesomenessCreator2 = _interopRequireDefault(_FormActionAwesomene
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_Injector2.default.customise('File', _CustomGalleryItemCreator2.default);
-_Injector2.default.customise('TextField', _TextFieldCharacterCounterCreator2.default);
-_Injector2.default.customise('TextField', _TextFieldPasswordStrengthCheckerCreator2.default);
-_Injector2.default.customise('FormAction', _FormActionAwesomenessCreator2.default);
+_Injector2.default.update({
+  name: 'module-a',
+  after: 'module-b'
+}, function (update) {
+  update('File', _CustomGalleryItemCreator2.default);
+  update('TextField', _TextFieldCharacterCounterCreator2.default);
+  update('FormAction', _FormActionAwesomenessCreator2.default);
+});
 
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-module.exports = Redux;
+_Injector2.default.update({
+  name: 'module-b'
+}, function (update) {
+  update('TextField', _TextFieldLengthCheckerCreator2.default);
+});
 
 /***/ })
 /******/ ]);
