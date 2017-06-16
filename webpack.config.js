@@ -15,7 +15,9 @@ var config = {
         query: {
           presets: ['es2015', 'react'],
           comments: false,
-          plugins: ['transform-object-rest-spread']
+          plugins: [
+            'transform-object-rest-spread',
+          ],
         }
       }
     ]

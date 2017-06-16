@@ -4,3 +4,9 @@ Name: unclecheese
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'unclecheese-assets/js/dist/main.bundle.js'
+SilverStripe\Assets\File:
+  extensions:
+    - UncleCheese\TestAssets\UncleCheeseFile
+SilverStripe\AssetAdmin\Forms\FileFormFactory:
+  extensions:
+    - UncleCheese\TestAssets\UncleCheeseFileFormFactory
