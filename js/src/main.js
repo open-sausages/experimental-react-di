@@ -7,24 +7,24 @@ import ConfirmingFormAction from './ConfirmingFormAction';
 const sheet = window.document.styleSheets[0]
 sheet.insertRule('.green { border: 5px solid green; }', sheet.cssRules.length);
 
-Injector.register('PrettyPhoneNumberField', PrettyPhoneNumberField);
+Injector.react.register('PrettyPhoneNumberField', PrettyPhoneNumberField);
 
 Injector.transform(
   'toggle-field',
-  (update) => {
+  (updater) => {
     // POC #1: Hide a form field based on another's value
-    update('ReduxFormField', HideableComponentCreator);
+    updater.react('ReduxFormField', HideableComponentCreator);
 
     // POC #5: Have a button show "confirming buttons"
-    update('FormAction.AssetAdmin.EditForm.action_save', ConfirmingFormAction);
+    updater.react('FormAction.AssetAdmin.EditForm.action_save', ConfirmingFormAction);
   }
 );
 
 Injector.transform(
   'tester',
-  (update) => {
-    update(
-      'FormSchemaMiddleware.AssetAdmin.*',
+  (updater) => {
+    updater.form.alterSchema(
+      'AssetAdmin.*',
       (updateSchema) => (values, form) => {
         return updateSchema(
           form
@@ -51,9 +51,9 @@ Injector.transform(
 // POC #4: Validation middleware
 Injector.transform(
   'tester-2',
-  (update) => {
-    update(
-      'FormValidationMiddleware.AssetAdmin.*',
+  (updater) => {
+    updater.form.addValidation(
+      'AssetAdmin.*',
       (validate) => (values, errors) => {
         const requiredLength = values.Country === 'US' ? 5 : 4;
         if (!values.Country || !values.PostalCode) {

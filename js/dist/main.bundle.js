@@ -116,48 +116,58 @@ exports.default = function (FormAction) {
     }
 
     _createClass(ConfirmingFormAction, [{
-      key: "confirm",
+      key: 'confirm',
       value: function confirm(e) {
         this.props.handleClick(e, this.props.name || this.props.id);
+        console.log('called handleclick', this.props.handleClick);
         this.setState({ confirming: false });
       }
     }, {
-      key: "cancel",
+      key: 'cancel',
       value: function cancel() {
         this.setState({ confirming: false });
       }
     }, {
-      key: "preClick",
+      key: 'preClick',
       value: function preClick(event) {
         event.preventDefault();
         this.setState({ confirming: true });
       }
     }, {
-      key: "render",
+      key: 'render',
       value: function render() {
         var extraButtons = [];
         var _props = this.props,
             confirmText = _props.confirmText,
             cancelText = _props.cancelText;
 
-        if (this.state.confirming) {
-          extraButtons.push(_react2.default.createElement(
-            "button",
-            { key: "confirm", type: "submit", name: this.props.name, onClick: this.confirm },
-            confirmText
-          ));
-          extraButtons.push(_react2.default.createElement(
-            "button",
-            { key: "cancel", onClick: this.cancel },
-            cancelText
-          ));
-        }
+        var buttonProps = _extends({}, this.props, {
+          extraClass: 'ss-ui-action-constructive',
+          attributes: _extends({}, this.props.attributes, {
+            type: 'button'
+          })
+        });
+        delete buttonProps.name;
+        delete buttonProps.type;
+
+        var hideStyle = {
+          display: this.state.confirming ? null : 'none'
+        };
 
         return _react2.default.createElement(
-          "div",
+          'div',
           null,
-          _react2.default.createElement(FormAction, _extends({}, this.props, { handleClick: this.preClick })),
-          extraButtons
+          _react2.default.createElement(FormAction, _extends({}, buttonProps, { handleClick: this.preClick })),
+          _react2.default.createElement(
+            'button',
+            { style: hideStyle, key: 'confirm', type: 'submit', name: this.props.name, onClick: this.confirm },
+            confirmText
+          ),
+          _react2.default.createElement(
+            'button',
+            { style: hideStyle, key: 'cancel', type: 'button', onClick: this.cancel },
+            cancelText
+          )
         );
       }
     }]);
@@ -296,16 +306,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var sheet = window.document.styleSheets[0];
 sheet.insertRule('.green { border: 5px solid green; }', sheet.cssRules.length);
 
-_Injector2.default.register('PrettyPhoneNumberField', _PrettyPhoneNumberField2.default);
+_Injector2.default.react.register('PrettyPhoneNumberField', _PrettyPhoneNumberField2.default);
 
-_Injector2.default.transform('toggle-field', function (update) {
-  update('ReduxFormField', _HideableComponentCreator2.default);
+_Injector2.default.transform('toggle-field', function (updater) {
+  updater.react('ReduxFormField', _HideableComponentCreator2.default);
 
-  update('FormAction.AssetAdmin.EditForm.action_save', _ConfirmingFormAction2.default);
+  updater.react('FormAction.AssetAdmin.EditForm.action_save', _ConfirmingFormAction2.default);
 });
 
-_Injector2.default.transform('tester', function (update) {
-  update('FormSchemaMiddleware.AssetAdmin.*', function (updateSchema) {
+_Injector2.default.transform('tester', function (updater) {
+  updater.form.alterSchema('AssetAdmin.*', function (updateSchema) {
     return function (values, form) {
       return updateSchema(form.updateField('State', {
         shouldHide: values.Country !== 'US'
@@ -317,8 +327,8 @@ _Injector2.default.transform('tester', function (update) {
   });
 });
 
-_Injector2.default.transform('tester-2', function (update) {
-  update('FormValidationMiddleware.AssetAdmin.*', function (validate) {
+_Injector2.default.transform('tester-2', function (updater) {
+  updater.form.addValidation('AssetAdmin.*', function (validate) {
     return function (values, errors) {
       var requiredLength = values.Country === 'US' ? 5 : 4;
       if (!values.Country || !values.PostalCode) {

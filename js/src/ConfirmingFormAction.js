@@ -12,6 +12,7 @@ export default (FormAction) => {
     
     confirm(e) {
       this.props.handleClick(e, this.props.name || this.props.id);
+      console.log('called handleclick', this.props.handleClick);
       this.setState({ confirming: false });
     }
     
@@ -27,19 +28,28 @@ export default (FormAction) => {
     render() {
       const extraButtons = [];
       const { confirmText, cancelText } = this.props;
-      if (this.state.confirming) {
-        extraButtons.push(
-          <button key="confirm" type="submit" name={this.props.name} onClick={this.confirm}>
-            {confirmText}
-          </button>
-        );
-        extraButtons.push(<button key="cancel" onClick={this.cancel}>{cancelText}</button>);
-      }
+      const buttonProps = {
+        ...this.props,
+        extraClass: 'ss-ui-action-constructive',
+        attributes: {
+          ...this.props.attributes,
+          type: 'button'
+        },
+      };
+      delete buttonProps.name;
+      delete buttonProps.type;
+
+      const hideStyle = {
+        display: this.state.confirming ? null : 'none'
+      };
 
       return (
         <div>
-          <FormAction { ...this.props } handleClick={this.preClick} />
-          {extraButtons}
+          <FormAction { ...buttonProps } handleClick={this.preClick} />
+          <button style={hideStyle} key="confirm" type="submit" name={this.props.name} onClick={this.confirm}>
+            {confirmText}
+          </button>
+          <button style={hideStyle} key="cancel" type="button" onClick={this.cancel}>{cancelText}</button>
         </div>
       );
     }
